@@ -3,10 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Simple summarizer Demo</title>
-<link rel="icon" type="../static/favicon.ico" sizes="16x16" href="static/favicon.ico">
-<link rel="stylesheet" href="../static/style.css">
-<link rel="stylesheet" href="../static/bootstrap.css">
-<link rel='stylesheet prefetch' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.2/css/font-awesome.min.css'>
+
 
 </head>
 <body>
@@ -14,8 +11,7 @@
   <div class="vertical-align">
    
             <div class="">
-            <!--  <h2>Simple Chat Demo - n-Powered</h2>
-              <hr> -->
+            
 
               <div id="form-messages" class="wrapper-messages scrollbar">
 					<div class="loader" id="loaderId">
@@ -26,7 +22,7 @@
 				<div class="message question" id="firstMsgId"> Hello, I am summarizer with basic need. How can I help you?</div>
 			  </div>
               <div ></div>
-              <!--<form id="ajax-contact" method="" action="/">-->
+              
               <div class="field message-input">
                 <label for="name">Please copy and paste your paragraph here</label>
                 <input type="text" id="name" name="name" required >
@@ -37,7 +33,7 @@
               </div>
               
               
-              <!--</form>--> 
+              
             </div>
           
      
@@ -45,50 +41,23 @@
 </section>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> 
 <script>
-
-	//$(".wrapper-messages").animate({ scrollTop: $(document).height() }, "fast");
-
-	/*$("#ajax-contact").submit(function(event){
-		event.preventDefault();
-		
-		$.ajax({
-				type: "POST",
-				url: "/response/",
-				contentType: "application/x-www-form-urlencoded",
-				data: $("#name").val(),
-				success: function(res) {
-					console.log(res);
-				}
-			});
-	});*/
-
- 
-	$(document).ready(function(){
-		$("#loaderId").removeClass("hidden");
-		$("button").click( function(){
+$(document).ready(function(){
+$("#loaderId").removeClass("hidden");
+$("button").click( function(){
 		
 		//$("button").on("keyup", function(){
 			//console.log('keyed');
 		
-			var dataraw = $("#name").val();
-			var data = {"foo" : dataraw}
-			var wordcount = lengthCheck(dataraw);
-	/*		if  (wordcount <=3) {
-				var dynaDiv = $('<div class="message answer" ></div>');
-				dynaDiv.html('can you be more specific..');				
-				dynaDiv.appendTo("#form-messages"); 
-//				alert ('can you be more specific');
-				return false;
-			} */
-			 //else {
-				$.ajax({ type : "POST", 
-				url : "/response/", 
-				data: JSON.stringify(data, null, '\t'), 
-				contentType: 'application/json;charset=UTF-8', 
-				success: function(result){ 
+	var dataraw = $("#name").val();
+	var data = {"foo" : dataraw}
+			
+		$.ajax({ type : "POST", 
+			url : "/response/", 
+			data: JSON.stringify(data, null, '\t'), 
+			contentType: 'application/json;charset=UTF-8', 
+			success: function(result){ 
 					console.log(result); 
 					var count = 0;
-					var resultText = stripSSML(result);
 					var question = $('<div class="message question" ></div> ');
 					question.html(dataraw);
 					var dynaDiv = $('<div class="message answer" ></div>');
@@ -132,26 +101,6 @@
 			}
 		}	
 
-		function stripSSML(stringInput) {
-			var regex = /(<([^>]+)>)/ig;
-			return stringInput.replace(regex, "");
-		}		
-		
-		function lengthCheck(stringInput) {
-			var regex = /(<([^>]+)>)/ig;
-			var wordCount = stringInput.trim().replace(regex, ' ').split(' ').length;
-			return wordCount;
-		}		
-	/*	setTimeout(function() {
-                $.when($('div.loader').addClass('hidden')).done(function() {
-                    var messageObj = $('<div class="message to typing"><div class="typing_loader"></div></div>');
-                    $(state.wrapper).find('#messages').append(messageObj);
-                    state.scrollDown();
-                    state.printQuestion();
-                }); 
-            }, 1000);	*/
-		
-		
 	});
 </script>
 </body>
