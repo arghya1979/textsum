@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Simple Chat Demo</title>
+<link rel="icon" type="../static/favicon.ico" sizes="16x16" href="static/favicon.ico">
+<link rel="stylesheet" href="../static/style.css">
+<link rel="stylesheet" href="../static/bootstrap.css">
+<link rel='stylesheet prefetch' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.2/css/font-awesome.min.css'>
+
+</head>
+<body>
+<section id="page-wrapper">
+  <div class="vertical-align">
+   
+            <div class="field message-input">
+                <textarea name="comments" id="comments" style="width:96%;height:90px;background-color:gold;color:olive;border:none;padding:2%;font:22px/30px sans-serif;">
+					Write your text here
+				</textarea>
+                <input type="text" id="name" name="name" required >
+				<div class="bttn">
+					<button type="submit"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
+                </div>
+				<div class="clearfix"></div>
+            </div>
+              
+              
+              <!--</form>--> 
+    </div>
+          
+     
+ </section>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> 
+<script>
+$(document).ready(function(){
+		$("#loaderId").removeClass("hidden");
+		$("button").click( function(){
+		
+		//$("button").on("keyup", function(){
+			//console.log('keyed');
+		
+			var dataraw = $("#name").val();
+			var data = {"foo" : dataraw}
+			var wordcount = lengthCheck(dataraw);
+	/*		if  (wordcount <=3) {
+				var dynaDiv = $('<div class="message answer" ></div>');
+				dynaDiv.html('can you be more specific..');				
+				dynaDiv.appendTo("#form-messages"); 
+//				alert ('can you be more specific');
+				return false;
+			} */
+			 //else {
+				$.ajax({ type : "POST", 
+				url : "/response/", 
+				data: JSON.stringify(data, null, '\t'), 
+				contentType: 'application/json;charset=UTF-8', 
+				success: function(result){ 
+					console.log(result); 
+					var count = 0;
+					var resultText = stripSSML(result);
+					var question = $('<div class="message question" ></div> ');
+					question.html(dataraw);
+					var dynaDiv = $('<div class="message answer" ></div>');
+					dynaDiv.html(resultText);				
+					question.appendTo("#form-messages");
+					dynaDiv.appendTo("#form-messages");
+					$("#loaderId").addClass("hidden");
+					
+					var randomMsg = getRandomMsg();				
+					var defaultans = $('<div class="message answer" ></div>');
+					defaultans.html(randomMsg);
+					defaultans.appendTo("#form-messages");
+
+					$("#name").val('');
+					//$("#form-messages").after(question, dynaDiv);				
+					//question.appendTo(dynaDiv);
+					//dynaDiv.appendTo("#form-messages");
+					count = count+1;
+					$(".wrapper-messages").stop().animate({ scrollTop: $(".wrapper-messages")[0].scrollHeight}, 1000);
+				 }});
+			});
+</script>
+</body>
+</html>			

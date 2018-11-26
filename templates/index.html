@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Simple summarizer Demo</title>
+<link rel="icon" type="../static/favicon.ico" sizes="16x16" href="static/favicon.ico">
+<link rel="stylesheet" href="../static/style.css">
+<link rel="stylesheet" href="../static/bootstrap.css">
+<link rel='stylesheet prefetch' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.2/css/font-awesome.min.css'>
+
+</head>
+<body>
+<section id="page-wrapper">
+  <div class="vertical-align">
+   
+            <div class="">
+            <!--  <h2>Simple Chat Demo - n-Powered</h2>
+              <hr> -->
+
+              <div id="form-messages" class="wrapper-messages scrollbar">
+					<div class="loader" id="loaderId">
+					   <span></span>
+					   <span></span>
+					   <span></span>
+					</div>			  	  
+				<div class="message question" id="firstMsgId"> Hello, I am summarizer with basic need. How can I help you?</div>
+			  </div>
+              <div ></div>
+              <!--<form id="ajax-contact" method="" action="/">-->
+              <div class="field message-input">
+                <label for="name">Please copy and paste your paragraph here</label>
+                <input type="text" id="name" name="name" required >
+				<div class="bttn">
+                <button type="submit"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
+              </div>
+			  <div class="clearfix"></div>
+              </div>
+              
+              
+              <!--</form>--> 
+            </div>
+          
+     
+  </div>
+</section>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> 
+<script>
+
+	//$(".wrapper-messages").animate({ scrollTop: $(document).height() }, "fast");
+
+	/*$("#ajax-contact").submit(function(event){
+		event.preventDefault();
+		
+		$.ajax({
+				type: "POST",
+				url: "/response/",
+				contentType: "application/x-www-form-urlencoded",
+				data: $("#name").val(),
+				success: function(res) {
+					console.log(res);
+				}
+			});
+	});*/
+
+ 
+	$(document).ready(function(){
+		$("#loaderId").removeClass("hidden");
+		$("button").click( function(){
+		
+		//$("button").on("keyup", function(){
+			//console.log('keyed');
+		
+			var dataraw = $("#name").val();
+			var data = {"foo" : dataraw}
+			var wordcount = lengthCheck(dataraw);
+	/*		if  (wordcount <=3) {
+				var dynaDiv = $('<div class="message answer" ></div>');
+				dynaDiv.html('can you be more specific..');				
+				dynaDiv.appendTo("#form-messages"); 
+//				alert ('can you be more specific');
+				return false;
+			} */
+			 //else {
+				$.ajax({ type : "POST", 
+				url : "/response/", 
+				data: JSON.stringify(data, null, '\t'), 
+				contentType: 'application/json;charset=UTF-8', 
+				success: function(result){ 
+					console.log(result); 
+					var count = 0;
+					var resultText = stripSSML(result);
+					var question = $('<div class="message question" ></div> ');
+					question.html(dataraw);
+					var dynaDiv = $('<div class="message answer" ></div>');
+					dynaDiv.html(resultText);				
+					question.appendTo("#form-messages");
+					dynaDiv.appendTo("#form-messages");
+					$("#loaderId").addClass("hidden");
+					
+					var randomMsg = getRandomMsg();				
+					var defaultans = $('<div class="message answer" ></div>');
+					defaultans.html(randomMsg);
+					defaultans.appendTo("#form-messages");
+
+					$("#name").val('');
+					//$("#form-messages").after(question, dynaDiv);				
+					//question.appendTo(dynaDiv);
+					//dynaDiv.appendTo("#form-messages");
+					count = count+1;
+					$(".wrapper-messages").stop().animate({ scrollTop: $(".wrapper-messages")[0].scrollHeight}, 1000);
+				 }});
+			});
+			
+		
+		var goodByeMsg = [
+			' What else would you like to know ',
+			' Is there anything else I can help you with ',
+			' Do you have anything else to ask ',
+			' Can I help you with anything else ',
+			' Is there any other question in your mind ',
+			' Do you have any other query '
+		];
+
+		function getRandomInt(min, max) {
+			return Math.floor(Math.random() * (max - min + 1)) + min;
+		}
+
+		function getRandomMsg() {
+			if (goodByeMsg.length != 0) {
+				var randomNum = getRandomInt(0, goodByeMsg.length - 1);
+				return goodByeMsg[randomNum];
+			}
+		}	
+
+		function stripSSML(stringInput) {
+			var regex = /(<([^>]+)>)/ig;
+			return stringInput.replace(regex, "");
+		}		
+		
+		function lengthCheck(stringInput) {
+			var regex = /(<([^>]+)>)/ig;
+			var wordCount = stringInput.trim().replace(regex, ' ').split(' ').length;
+			return wordCount;
+		}		
+	/*	setTimeout(function() {
+                $.when($('div.loader').addClass('hidden')).done(function() {
+                    var messageObj = $('<div class="message to typing"><div class="typing_loader"></div></div>');
+                    $(state.wrapper).find('#messages').append(messageObj);
+                    state.scrollDown();
+                    state.printQuestion();
+                }); 
+            }, 1000);	*/
+		
+		
+	});
+</script>
+</body>
+</html>
